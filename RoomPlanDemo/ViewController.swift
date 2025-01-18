@@ -12,7 +12,11 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.addSubview(captureView)
+        view.topAnchor.constraint(equalTo: captureView.safeAreaLayoutGuide.topAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: captureView.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        view.leadingAnchor.constraint(equalTo: captureView.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: captureView.safeAreaLayoutGuide.trailingAnchor).isActive = true
     }
 
     private lazy var captureView: RoomCaptureView = {

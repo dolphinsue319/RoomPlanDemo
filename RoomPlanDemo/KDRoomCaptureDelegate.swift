@@ -30,7 +30,8 @@ class KDRoomCaptureDelegate: RoomCaptureViewDelegate {
 
     /// Provides the delegate with the post-processed scan results once the view presents them.
     func captureView(didPresent processedResult: CapturedRoom, error: (any Error)?) {
-        
+        print("processedResult.walls.count: \(processedResult.walls.count)")
+        print("processedResult.doors.count: \(processedResult.doors.count)")
     }
 
 }
