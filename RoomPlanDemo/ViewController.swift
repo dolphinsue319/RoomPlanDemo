@@ -6,14 +6,24 @@
 //
 
 import UIKit
+import RoomPlan
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
     }
 
+    private lazy var captureView: RoomCaptureView = {
+        let view = RoomCaptureView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self.capureViewDelegate
+        return view
+    }()
 
+    private lazy var capureViewDelegate: KDRoomCaptureDelegate = {
+        KDRoomCaptureDelegate()
+    }()
 }
 
