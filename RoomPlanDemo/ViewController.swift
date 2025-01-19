@@ -19,6 +19,11 @@ class ViewController: UIViewController {
         view.trailingAnchor.constraint(equalTo: captureView.safeAreaLayoutGuide.trailingAnchor).isActive = true
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        captureView.captureSession.run(configuration: sessionConfig)
+    }
+
     private lazy var captureView: RoomCaptureView = {
         let view = RoomCaptureView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -26,6 +31,7 @@ class ViewController: UIViewController {
         return view
     }()
 
+    private let sessionConfig: RoomCaptureSession.Configuration = .init()
     private lazy var capureViewDelegate: KDRoomCaptureDelegate = {
         KDRoomCaptureDelegate()
     }()
