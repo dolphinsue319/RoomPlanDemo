@@ -7,8 +7,11 @@
 
 import Foundation
 import RoomPlan
+import Combine
 
 class KDRoomCaptureDelegate: RoomCaptureViewDelegate {
+
+    let usdFileDidSave = PassthroughSubject<URL, Never>()
 
     init () {
         
@@ -30,9 +33,10 @@ class KDRoomCaptureDelegate: RoomCaptureViewDelegate {
 
     /// Provides the delegate with the post-processed scan results once the view presents them.
     func captureView(didPresent processedResult: CapturedRoom, error: (any Error)?) {
-        let destinationURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("result.rmp")
+        let destinationURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("result.usd")
         do {
             try processedResult.export(to: destinationURL)
+            usdFileDidSave.send(destinationURL)
         }
         catch {
             print("processedResult.export error: \(error)")

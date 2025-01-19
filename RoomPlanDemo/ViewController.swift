@@ -7,6 +7,7 @@
 
 import UIKit
 import RoomPlan
+import Combine
 
 class ViewController: UIViewController {
 
@@ -17,6 +18,18 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        capureViewDelegate.usdFileDidSave.sink { [weak self] fileURL in
+            guard let self else { return }
+            Task { @MainActor in
+                let activityVC = UIActivityViewController(
+                    activityItems: [fileURL],
+                    applicationActivities: nil
+                )
+                self.present(activityVC, animated: true)
+            }
+        }.store(in: &subscriptions)
+
         view.addSubview(captureView)
         view.addSubview(captureButton)
 
@@ -43,11 +56,14 @@ class ViewController: UIViewController {
     }()
 
     private let sessionConfig: RoomCaptureSession.Configuration = .init()
+
     private lazy var capureViewDelegate: KDRoomCaptureDelegate = {
         KDRoomCaptureDelegate()
     }()
 
-    private let captureButton: UIButton = {
+    private var subscriptions: Set<AnyCancellable> = []
+
+    private lazy var captureButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(ButtonTitle.start.rawValue, for: .normal)
