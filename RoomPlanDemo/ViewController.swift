@@ -19,11 +19,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        capureViewDelegate.usdFileDidSave.sink { [weak self] fileURL in
+        capureViewDelegate.usdFileDidSaveSubject.sink { [weak self] data in
             guard let self else { return }
             Task { @MainActor in
                 let activityVC = UIActivityViewController(
-                    activityItems: [fileURL],
+                    activityItems: [data],
                     applicationActivities: nil
                 )
                 self.present(activityVC, animated: true)

@@ -11,7 +11,7 @@ import Combine
 
 class KDRoomCaptureDelegate: RoomCaptureViewDelegate {
 
-    let usdFileDidSave = PassthroughSubject<URL, Never>()
+    let usdFileDidSaveSubject = PassthroughSubject<Data, Never>()
 
     init () {
         
@@ -35,8 +35,17 @@ class KDRoomCaptureDelegate: RoomCaptureViewDelegate {
     func captureView(didPresent processedResult: CapturedRoom, error: (any Error)?) {
         let destinationURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("result.usd")
         do {
-            try processedResult.export(to: destinationURL)
-            usdFileDidSave.send(destinationURL)
+            try processedResult.export(to: destinationURL, exportOptions: .parametric)
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard let self else { return }
+                do {
+                    let data = try Data(contentsOf: destinationURL)
+                    self.usdFileDidSaveSubject.send(data)
+                }
+                catch {
+                    print("Data(contentsOf:) error: \(error)")
+                }
+            }
         }
         catch {
             print("processedResult.export error: \(error)")
